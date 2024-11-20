@@ -1,0 +1,106 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class RegistroProgramador {
+    private JFrame frame;
+    private JTextField nombreField, apellidoField;
+    private JRadioButton masculinoButton, femeninoButton;
+    private JCheckBox javaCheckBox, pythonCheckBox, javascriptCheckBox;
+    private JComboBox<String> cargoComboBox, estadoComboBox;
+
+    public RegistroProgramador() {
+        frame = new JFrame("Registro de Programador");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setLayout(new BorderLayout());
+
+        // Crear pestañas
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("Datos Personales", crearPanelDatosPersonales());
+        tabbedPane.addTab("Habilidades", crearPanelHabilidades());
+        tabbedPane.addTab("Información Adicional", crearPanelInformacionAdicional());
+
+        frame.add(tabbedPane, BorderLayout.CENTER);
+
+        // Botón de enviar
+        JButton enviarButton = new JButton("Registrar");
+        enviarButton.addActionListener(e -> registrar());
+        frame.add(enviarButton, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+    }
+
+    private JPanel crearPanelDatosPersonales() {
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        nombreField = crearCampoTexto(panel, "Nombre:");
+        apellidoField = crearCampoTexto(panel, "Apellido:");
+
+        panel.add(new JLabel("Género:"));
+        ButtonGroup generoGroup = new ButtonGroup();
+        masculinoButton = new JRadioButton("Masculino");
+        femeninoButton = new JRadioButton("Femenino");
+        generoGroup.add(masculinoButton);
+        generoGroup.add(femeninoButton);
+        JPanel generoPanel = new JPanel();
+        generoPanel.add(masculinoButton);
+        generoPanel.add(femeninoButton);
+        panel.add(generoPanel);
+
+        return panel;
+    }
+
+    private JPanel crearPanelHabilidades() {
+        JPanel panel = new JPanel();
+        javaCheckBox = new JCheckBox("Java");
+        pythonCheckBox = new JCheckBox("Python");
+        javascriptCheckBox = new JCheckBox("JavaScript");
+        panel.add(javaCheckBox);
+        panel.add(pythonCheckBox);
+        panel.add(javascriptCheckBox);
+        return panel;
+    }
+
+    private JPanel crearPanelInformacionAdicional() {
+        JPanel panel = new JPanel(new GridLayout(2, 2));
+        panel.add(new JLabel("Cargo:"));
+        String[] cargos = {"Desarrollador", "Analista", "Gerente", "Tester"};
+        cargoComboBox = new JComboBox<>(cargos);
+        panel.add(cargoComboBox);
+
+        panel.add(new JLabel("Estado:"));
+        String[] estados = {"Activo", "Inactivo", "Suspendido"};
+        estadoComboBox = new JComboBox<>(estados);
+        panel.add(estadoComboBox);
+
+        return panel;
+    }
+
+    private JTextField crearCampoTexto(JPanel panel, String label) {
+        panel.add(new JLabel(label));
+        JTextField textField = new JTextField();
+        panel.add(textField);
+        return textField;
+    }
+
+    private void registrar() {
+        String nombre = nombreField.getText();
+        String apellido = apellidoField.getText();
+        String genero = masculinoButton.isSelected() ? "Masculino" : "Femenino";
+        StringBuilder lenguajes = new StringBuilder();
+        if (javaCheckBox.isSelected()) lenguajes.append("Java ");
+        if (pythonCheckBox.isSelected()) lenguajes.append("Python ");
+        if (javascriptCheckBox.isSelected()) lenguajes.append("JavaScript ");
+        String cargo = (String) cargoComboBox.getSelectedItem();
+        String estado = (String) estadoComboBox.getSelectedItem();
+
+        String mensaje = String.format("Nombre: %s\nApellido: %s\nGénero: %s\nLenguajes: %s\nCargo: %s\nEstado: %s",
+                nombre, apellido, genero, lenguajes.toString().trim(), cargo, estado);
+        JOptionPane.showMessageDialog(frame, mensaje, "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(RegistroProgramador::new);
+    }
+}
